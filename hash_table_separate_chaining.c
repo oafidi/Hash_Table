@@ -53,7 +53,7 @@ bool insert_element(Case **Hash_Table, char *key, char *value) {
     int hash_key;
     Case *element, *Node, *prev;
 
-    if (!key || !value)
+    if (!key || !value || !Hash_Table)
         return false;
 
     element = malloc(sizeof(Case));
@@ -73,7 +73,7 @@ bool insert_element(Case **Hash_Table, char *key, char *value) {
     Node = lst_findNodeWithPrev(Hash_Table[hash_key], key, &prev);
     if (Node) {
         free(Node->value);
-        Node->value = strdup(value);
+        Node->value = element->value;
         free(element->key);
         free(element);
         return true;
@@ -91,10 +91,13 @@ void delete_element(Case **Hash_Table, char *key) {
     lst_deleteNode(&Hash_Table[hash_key], key);
 }
 
-void read_table(Case **Hash_Table) {
+void read_table(Case **Hash_Table)
+{
     char *c = " ";
     Case *temp;
 
+    if (!Hash_Table)
+        return ;
     printf("[");
     for (int i = 0; i < TABLE_SIZE; i++) {
         temp = Hash_Table[i];
@@ -110,6 +113,8 @@ void read_table(Case **Hash_Table) {
 void clear_table(Case **Hash_Table) {
     Case *temp, *next;
 
+    if (!Hash_Table)
+        return ;
     for (int i = 0; i < TABLE_SIZE; i++) {
         temp = Hash_Table[i];
         while (temp) {
@@ -129,10 +134,10 @@ int main() {
 
     if (!Hash_Table)
         return 1;
-
-    insert_element(Hash_Table, "Morocco", "Rabat");
+    insert_element(NULL, "Morocco", "Rabat");
     insert_element(Hash_Table, "France", "Paris");
     insert_element(Hash_Table, "America", "Washington");
+    insert_element(Hash_Table, NULL, "Nice");
     printf("Before deletion:\n");
     read_table(Hash_Table);
 

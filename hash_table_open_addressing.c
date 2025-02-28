@@ -4,10 +4,10 @@ unsigned int hash_function(char *key)
 {
     unsigned int hash_key = 0;
     size_t key_len = strlen(key);
-    
+
     for (int i = 0; i < key_len; i++)
         hash_key = ((hash_key + key[i]) * key[i]) % TABLE_SIZE;
-    
+
     return hash_key;
 }
 
@@ -16,7 +16,7 @@ bool insert_element(Case **Hash_Table, char *key, char *value)
     int hash_key, i;
     Case *element;
 
-    if (!key)
+    if (!key || !Hash_Table || !value)
         return false;
     element = malloc(sizeof(Case));
     if (!element)
@@ -64,7 +64,7 @@ bool delete_element(Case **Hash_Table, char *key)
 {
     int hash_key, i;
 
-    if (!key)
+    if (!key || !Hash_Table)
         return false;
     hash_key = hash_function(key);
 
@@ -86,6 +86,8 @@ bool delete_element(Case **Hash_Table, char *key)
 
 void read_table(Case **Hash_Table)
 {
+    if (!Hash_Table)
+        return ;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         if (Hash_Table[i])
@@ -107,20 +109,20 @@ void clear_table(Case **Hash_Table)
     }
     free(Hash_Table);
 }
-
 int main()
 {
+
     Case **Hash_Table = calloc(TABLE_SIZE, sizeof(Case *));
 
     if (!Hash_Table)
         return 1;
-    
+
     insert_element(Hash_Table, "Morocco", "Rabat");
     insert_element(Hash_Table, "France", "Paris");
     insert_element(Hash_Table, "America", "Washington");
-    
+    insert_element(Hash_Table, "France", "NICE");
     read_table(Hash_Table);
-    
+
     delete_element(Hash_Table, "France");
     read_table(Hash_Table);
     clear_table(Hash_Table);
