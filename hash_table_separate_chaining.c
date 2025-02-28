@@ -41,10 +41,12 @@ void lst_deleteNode(Case **head, char *key) {
 
 unsigned int hash_function(char *key) {
     unsigned int hash_key = 0;
-    size_t key_len = strlen(key);
+    int i = 0;
 
-    for (int i = 0; i < key_len; i++) {
+    while (key[i])
+    {
         hash_key = ((hash_key + key[i]) * key[i]) % TABLE_SIZE;
+        i++;
     }
     return hash_key;
 }
@@ -60,8 +62,12 @@ bool insert_element(Case **Hash_Table, char *key, char *value) {
     if (!element)
         return false;
 
-    element->key = strdup(key);
     element->value = strdup(value);
+    if (!element->value)
+        return (free(element), false);
+    element->key = strdup(key);
+    if (!element->key)
+        return (free(element->value), free(element), false);
     element->next = NULL;
 
     hash_key = hash_function(key);
